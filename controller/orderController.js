@@ -40,7 +40,7 @@ exports.saveOrder = function(req, res) {
 
 exports.getItemOrder = function(req, res) {
     connection.query("SELECT * FROM `mysql-docker`.orderList ", (error, result) =>  {
-        console.log(result);
+        // console.log(result);
         
         if (error) {console.log(error);} else {
             response.ok(result, res)
@@ -50,10 +50,28 @@ exports.getItemOrder = function(req, res) {
 
 exports.updateOrder = function(req, res) {
     const order = req.body;
-    connection.query("UPDATE `mysql-docker`.orders SET `name`=?, `tableNumber`=?, `totalAmount`=? WHERE `id`= ?",[order.name, order.tableNumber, order.totalAmount,order.id], (error, result) =>  {
-        console.log(result.values);
-        if (error) {console.log(error);} else {
+    console.log(order);
+    connection.query("UPDATE `mysql-docker`.orders SET `name`=?, `tableNumber`=?, `totalAmount`=?, `paymentStatus`=? WHERE `id`= ?",[order.name, order.tableNumber, order.totalAmount, order.paymentStatus, order.id], (error, result) =>  {
+        console.log(result);
+        if (!error) {
             response.ok(result, res)
+            console.log(result);
+
+
+            
         }
     }) 
 }
+
+exports.deleteOrder = function(req, res) {    
+    console.log("Body "+req.body);
+    connection.query("DELETE FROM `mysql-docker`.orders WHERE id = ?",req.body, function (error, result){
+        if(error) {console.log(error)} else{
+            connection.query("DELETE FROM `mysql-docker`.orderList WHERE orderId = ?",req.body, function (error, result){
+                if(error) {console.log(error)} else{
+                    response.ok(result, res)
+                }
+            });
+        }
+    });
+};

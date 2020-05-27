@@ -25,4 +25,7 @@ module.exports = function(app) {
     app.route('/updateOrder')
         .put(orderController.updateOrder);
 
+    app.route('/deleteOrder')
+        .delete(orderController.deleteOrder)
+
 };
